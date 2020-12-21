@@ -28,14 +28,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     var recyclerViewAdapter = RecyclerViewAdapter()
     private lateinit var searchViewModel: SearchViewModel
-    //private lateinit var SongsDB: SongDatabase
+    private lateinit var SongsDB: SongDatabase
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //SongsDB = SongDatabase(this)//Room.databaseBuilder(this, SongDatabase::class.java,"songs_db").build()
+        SongsDB = SongDatabase(this)	//Room.databaseBuilder(this, SongDatabase::class.java,"songs_db").build()
         setUpViews()
     }
 
@@ -59,7 +59,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun searchSongs(searchTerm: String) {
-        /*songs = searchFromDB(searchTerm)
+        songs = searchFromDB(searchTerm)
         if(songs.isNotEmpty()) {
             Toast.makeText(this,"Songs From DB",Toast.LENGTH_LONG).show()
             recyclerView.visibility = View.VISIBLE
@@ -68,23 +68,22 @@ class MainActivity : AppCompatActivity() {
             recyclerViewAdapter.notifyDataSetChanged()
         } else{
             Toast.makeText(this,"Songs From API",Toast.LENGTH_LONG).show()
-        */
             searchViewModel.searchSongs(searchTerm).observe(this, Observer {
                 if(it != null) {
                     recyclerView.visibility = View.VISIBLE
                     textView.visibility = View.INVISIBLE
                     recyclerViewAdapter.setListData(it.results)
                     recyclerViewAdapter.notifyDataSetChanged()
-                    //insetSongsToDB(it.results)
+                    insetSongsToDB(it.results)
                 } else {
                     recyclerView.visibility = View.INVISIBLE
                     textView.visibility = View.VISIBLE
                 }
             })
-        //}
+        }
     }
 
-    /*private fun insetSongsToDB(songs: List<Song>) {
+    private fun insetSongsToDB(songs: List<Song>) {
         GlobalScope.launch {
             SongsDB.songDao().insertSongsToDB(songs)
         }
@@ -102,5 +101,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return songsList
-    }*/
+    }
 }
